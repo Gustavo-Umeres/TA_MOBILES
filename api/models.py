@@ -38,13 +38,29 @@ class Categoria(models.Model):
 
 class Tecnico(models.Model):
     usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE, primary_key=True, limit_choices_to={'tipo': 'tecnico'})
-    calificacion = models.DecimalField(max_digits=2, decimal_places=1, default=0.0) # e.g., 4.5
-    fecha_vencimiento = models.DateField(null=True, blank=True) # For technician account expiration, if any
+    calificacion = models.DecimalField(max_digits=2, decimal_places=1, default=0.0)
+    fecha_vencimiento = models.DateField(null=True, blank=True) # This was already here, good for expiration
+    
+    # New fields for subscription management
+    suscripcion_activa = models.BooleanField(default=False)
+    fecha_inicio_suscripcion = models.DateField(null=True, blank=True)
+    fecha_fin_suscripcion = models.DateField(null=True, blank=True)
+    mercadopago_preference_id = models.CharField(max_length=255, blank=True, null=True,
+                                                help_text="ID de la preferencia de pago de Mercado Pago")
+    mercadopago_collector_id = models.CharField(max_length=255, blank=True, null=True,
+                                                help_text="ID del pagador en Mercado Pago")
+
     categorias = models.ManyToManyField(Categoria, through='Tecnico_Categorias')
     distritos = models.ManyToManyField('Distritos', through='DistritosTecnicos')
 
     def __str__(self):
         return f"Técnico: {self.usuario.username}"
+
+    # Add a method to easily check subscription status
+    def is_subscription_active(self):
+        from datetime import date
+        return self.suscripcion_activa and self.fecha_fin_suscripcion and self.fecha_fin_suscripcion >= date.today()
+
 
 class Tecnico_Categorias(models.Model):
     tecnico = models.ForeignKey(Tecnico, on_delete=models.CASCADE)

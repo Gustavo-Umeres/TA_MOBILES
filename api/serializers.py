@@ -219,3 +219,13 @@ class SolicitudSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
+
+class MercadoPagoPreferenceSerializer(serializers.Serializer):
+    # This serializer is for validating the data coming from the frontend
+    # It doesn't map directly to a model
+    return_url_success = serializers.URLField(required=False)
+    return_url_pending = serializers.URLField(required=False)
+    return_url_failure = serializers.URLField(required=False)
+
+    # You might want to include amount or other details if not fixed
+    # For a fixed subscription, these can be hardcoded in the view

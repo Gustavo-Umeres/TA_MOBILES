@@ -155,3 +155,17 @@ DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+
+# ... existing imports ...
+import mercadopago
+# ... existing env setup ...
+
+# Mercado Pago Configuration
+MERCADOPAGO_ACCESS_TOKEN = env('MERCADOPAGO_ACCESS_TOKEN')
+# For sandbox, if you use client_id/secret for specific flows
+MERCADOPAGO_CLIENT_ID = env('MERCADOPAGO_CLIENT_ID')
+MERCADOPAGO_CLIENT_SECRET = env('MERCADOPAGO_CLIENT_SECRET')
+
+# Initialize Mercado Pago SDK (globally or within views/functions)
+# sdk = mercadopago.SDK(MERCADOPAGO_ACCESS_TOKEN) # Initialize when needed to avoid issues with deferred env loading
