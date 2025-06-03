@@ -23,9 +23,8 @@ class Usuario(AbstractUser):
     estado = models.CharField(max_length=20, choices=estado_choices, default='activo')
     creado_en = models.DateTimeField(auto_now_add=True)
 
-    # Use email as the unique identifier for authentication
-    USERNAME_FIELD = 'correo'
-    REQUIRED_FIELDS = ['username', 'first_name', 'last_name', 'dni', 'tipo'] # Fields required when creating a superuser
+    USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = ['first_name', 'last_name', 'dni', 'tipo','correo'] # Fields required when creating a superuser
 
     def __str__(self):
         return self.username
