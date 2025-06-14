@@ -23,8 +23,9 @@ class Usuario(AbstractUser):
     estado = models.CharField(max_length=20, choices=estado_choices, default='activo')
     creado_en = models.DateTimeField(auto_now_add=True)
 
-    USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = ['first_name', 'last_name', 'dni', 'tipo','correo'] # Fields required when creating a superuser
+    # Use email as the unique identifier for authentication
+    USERNAME_FIELD = 'correo'
+    REQUIRED_FIELDS = ['username', 'first_name', 'last_name', 'dni', 'tipo'] # Fields required when creating a superuser
 
     def __str__(self):
         return self.username
@@ -45,9 +46,13 @@ class Tecnico(models.Model):
     fecha_inicio_suscripcion = models.DateField(null=True, blank=True)
     fecha_fin_suscripcion = models.DateField(null=True, blank=True)
     mercadopago_preference_id = models.CharField(max_length=255, blank=True, null=True,
-                                                help_text="ID de la preferencia de pago de Mercado Pago")
+                                                    help_text="ID de la preferencia de pago de Mercado Pago")
     mercadopago_collector_id = models.CharField(max_length=255, blank=True, null=True,
-                                                help_text="ID del pagador en Mercado Pago")
+                                                    help_text="ID del pagador en Mercado Pago")
+
+    # New fields added
+    foto_perfil = CloudinaryField('image', null=True, blank=True)
+    descripcion = models.TextField(blank=True, null=True)
 
     categorias = models.ManyToManyField(Categoria, through='Tecnico_Categorias')
     distritos = models.ManyToManyField('Distritos', through='DistritosTecnicos')
@@ -96,6 +101,10 @@ class Solicitud(models.Model):
     calificacion = models.DecimalField(max_digits=2, decimal_places=1, null=True, blank=True)
     creado_en = models.DateTimeField(auto_now_add=True)
     actualizado_en = models.DateTimeField(auto_now=True)
+
+    # New fields added
+    titulo = models.CharField(max_length=255, blank=False, null=False, default='') # Added a default empty string for new non-nullable field
+    descripcion = models.TextField(blank=False, null=False, default='') # Added a default empty string for new non-nullable field
 
     def __str__(self):
         return f"Solicitud #{self.id} de {self.cliente.username} ({self.get_estado_display()})"
